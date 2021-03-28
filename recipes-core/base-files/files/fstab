@@ -1,0 +1,10 @@
+# fstab based on Poky default
+
+/dev/root            /                    auto       defaults              1  1
+proc                 /proc                proc       defaults              0  0
+devpts               /dev/pts             devpts     mode=0620,gid=5       0  0
+tmpfs                /run                 tmpfs      mode=0755,nodev,nosuid,strictatime 0  0
+tmpfs                /var/volatile        tmpfs      defaults              0  0
+
+# The FAT32 data partition
+LABEL=data           /media/data          vfat       auto,users,umask=0000 0  0

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Just start the window manager
+exec matchbox-window-manager

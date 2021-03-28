@@ -1,0 +1,51 @@
+From dc2396f7bb52403d5c5cd90f8e91e848991fa23c Mon Sep 17 00:00:00 2001
+From: Al Nikolov <alexey.nikolov@etteplan.com>
+Date: Thu, 14 May 2020 21:10:56 +0300
+Subject: [PATCH] Switch xinput_calibrator_pointercal.sh to use xorg.conf.d
+ mode
+
+[CM-4485]
+
+Closes: #75
+
+Signed-off-by: Al Nikolov <alexey.nikolov@etteplan.com>
+---
+ scripts/xinput_calibrator_pointercal.sh | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/scripts/xinput_calibrator_pointercal.sh b/scripts/xinput_calibrator_pointercal.sh
+index fccb197..112501a 100755
+--- a/scripts/xinput_calibrator_pointercal.sh
++++ b/scripts/xinput_calibrator_pointercal.sh
+@@ -7,25 +7,22 @@
+ # original script: Martin Jansa <Martin.Jansa@gmail.com>, 2010-01-31
+ # updated by Tias Guns <tias@ulyssis.org>, 2010-02-15
+ # updated by Koen Kooi <koen@dominion.thruhere.net>, 2012-02-28
++# updated by Al Nikolov <alexey.nikolov@etteplan.com>, 2020-05-14
+ 
+ PATH="/usr/bin:$PATH"
+ 
+ BINARY="xinput_calibrator"
+-CALFILE="/etc/pointercal.xinput"
++CALFILE="/etc/X11/xorg.conf.d/99-calibration.conf"
+ LOGFILE="/var/log/xinput_calibrator.pointercal.log"
+ 
+ if [ -e $CALFILE ] ; then
+   if grep replace $CALFILE ; then
+-    echo "Empty calibration file found, removing it"
+-    rm $CALFILE
++    echo "Empty calibration file found"
+   else
+     echo "Using calibration data stored in $CALFILE"
+-    . $CALFILE && exit 0
++    exit 0
+   fi
+ fi
+ 
+-CALDATA=`$BINARY --output-type xinput -v | tee $LOGFILE | grep '    xinput set' | sed 's/^    //g; s/$/;/g'`
+-if [ ! -z "$CALDATA" ] ; then
+-  echo $CALDATA > $CALFILE
+-  echo "Calibration data stored in $CALFILE (log in $LOGFILE)"
+-fi
++$BINARY --output-type xorg.conf.d -v --output-filename $CALFILE | tee $LOGFILE
++echo "Calibration data stored in $CALFILE (log in $LOGFILE)"

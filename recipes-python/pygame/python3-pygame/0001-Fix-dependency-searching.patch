@@ -1,0 +1,77 @@
+From ebb4e18ff5c2e5e94bb68e12bda5cb26c251b938 Mon Sep 17 00:00:00 2001
+From: Kevin O'Rourke <misc1-github@caboose.org.uk>
+Date: Sat, 30 Jan 2021 17:28:54 +0100
+Subject: [PATCH] Fix dependency searching
+
+---
+ buildconfig/config_unix.py | 43 +++++++++++++++++++++++---------------
+ 1 file changed, 26 insertions(+), 17 deletions(-)
+
+diff --git a/buildconfig/config_unix.py b/buildconfig/config_unix.py
+index f6a4ea4..03d2c71 100644
+--- a/buildconfig/config_unix.py
++++ b/buildconfig/config_unix.py
+@@ -191,9 +191,13 @@ def main(sdl2=False):
+ 
+     if sdl2:
+         DEPS = [
+-            DependencyProg('SDL', 'SDL_CONFIG', 'sdl2-config', '2.0', ['sdl']),
+-            Dependency('FONT', 'SDL_ttf.h', 'libSDL2_ttf.so', ['SDL2_ttf']),
+-            Dependency('IMAGE', 'SDL_image.h', 'libSDL2_image.so', ['SDL2_image']),
++            # Always use pkg-config since sdl2-config is deprecated
++            # DependencyProg('SDL', 'SDL_CONFIG', 'sdl2-config', '2.0', ['sdl']),
++            # Dependency('FONT', 'SDL_ttf.h', 'libSDL2_ttf.so', ['SDL2_ttf']),
++            # Dependency('IMAGE', 'SDL_image.h', 'libSDL2_image.so', ['SDL2_image']),
++            DependencyProg('SDL', 'PKG_CONFIG', 'pkg-config sdl2', '2.0', ['sdl'], '--modversion'),
++            DependencyProg('FONT', 'PKG_CONFIG', 'pkg-config SDL2_ttf', '2.0', ['SDL2_ttf'], '--modversion'),
++            DependencyProg('IMAGE', 'PKG_CONFIG', 'pkg-config SDL2_image', '2.0', ['SDL2_image'], '--modversion'),
+             Dependency('MIXER', 'SDL_mixer.h', 'libSDL2_mixer.so', ['SDL2_mixer']),
+             #Dependency('GFX', 'SDL_gfxPrimitives.h', 'libSDL2_gfx.so', ['SDL2_gfx']),
+         ]
+@@ -206,9 +210,13 @@ def main(sdl2=False):
+             #Dependency('GFX', 'SDL_gfxPrimitives.h', 'libSDL_gfx.so', ['SDL_gfx']),
+         ]
+     DEPS.extend([
+-        Dependency('PNG', 'png.h', 'libpng', ['png']),
+-        Dependency('JPEG', 'jpeglib.h', 'libjpeg', ['jpeg']),
+-        Dependency('SCRAP', '', 'libX11', ['X11']),
++        # Just use pkg-config
++        # Dependency('PNG', 'png.h', 'libpng', ['png']),
++        # Dependency('JPEG', 'jpeglib.h', 'libjpeg', ['jpeg']),
++        # Dependency('SCRAP', '', 'libX11', ['X11']),
++        DependencyProg('PNG', 'PKG_CONFIG', 'pkg-config libpng', None, ['png'], '--modversion'),
++        DependencyProg('JPEG', 'PKG_CONFIG', 'pkg-config libjpeg', None, ['jpeg'], '--modversion'),
++        DependencyProg('SCRAP', 'PKG_CONFIG', 'pkg-config x11', None, ['X11'], '--modversion'),
+         #Dependency('GFX', 'SDL_gfxPrimitives.h', 'libSDL_gfx.so', ['SDL_gfx']),
+     ])
+     is_freebsd = 'FreeBSD' in platform.system()
+@@ -245,17 +253,18 @@ def main(sdl2=False):
+     for d in DEPS:
+         d.configure(incdirs, libdirs)
+ 
+-    for d in DEPS[1:]:
+-        if not d.found:
+-            if "-auto" not in sys.argv:
+-                logging.warning(
+-                    "Some pygame dependencies were not found. "
+-                    "Pygame can still compile and install, but games that "
+-                    "depend on those missing dependencies will not run. "
+-                    "Use -auto to continue building without all dependencies. "
+-                )
+-                raise SystemExit("Missing dependencies")
+-            break
++    # Ignore the missing dependencies, since we don't want those features.
++    # for d in DEPS[1:]:
++    #     if not d.found:
++    #         if "-auto" not in sys.argv:
++    #             logging.warning(
++    #                 "Some pygame dependencies were not found. "
++    #                 "Pygame can still compile and install, but games that "
++    #                 "depend on those missing dependencies will not run. "
++    #                 "Use -auto to continue building without all dependencies. "
++    #             )
++    #             raise SystemExit("Missing dependencies")
++    #         break
+ 
+     return DEPS
+ 

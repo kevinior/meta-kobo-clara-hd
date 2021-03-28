@@ -1,0 +1,36 @@
+From ebadda7ed899249292239826a23bd7c7b8e4d9a1 Mon Sep 17 00:00:00 2001
+From: Kevin O'Rourke <misc1-github@caboose.org.uk>
+Date: Sun, 28 Feb 2021 14:00:15 +0100
+Subject: [PATCH] Fix broken HOSTCC when building tools.
+
+---
+ tools/Makefile     | 2 +-
+ tools/env/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/Makefile b/tools/Makefile
+index 2881a7c439..acbafc22cc 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -238,7 +238,7 @@ $(LOGO_DATA_H):	$(obj)/bmp_logo $(LOGO_BMP)
+ subdir- += env
+ 
+ ifneq ($(CROSS_BUILD_TOOLS),)
+-HOSTCC = $(CC)
++override HOSTCC = $(CC)
+ 
+ quiet_cmd_crosstools_strip = STRIP   $^
+       cmd_crosstools_strip = $(STRIP) $^; touch $@
+diff --git a/tools/env/Makefile b/tools/env/Makefile
+index 38ad118d03..95b28c0b3a 100644
+--- a/tools/env/Makefile
++++ b/tools/env/Makefile
+@@ -8,7 +8,7 @@
+ # fw_printenv is supposed to run on the target system, which means it should be
+ # built with cross tools. Although it may look weird, we only replace "HOSTCC"
+ # with "CC" here for the maximum code reuse of scripts/Makefile.host.
+-HOSTCC = $(CC)
++override HOSTCC = $(CC)
+ 
+ # Compile for a hosted environment on the target
+ HOST_EXTRACFLAGS  = $(patsubst -I%,-idirafter%, $(filter -I%, $(UBOOTINCLUDE))) \

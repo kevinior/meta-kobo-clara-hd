@@ -1,0 +1,120 @@
+From 8d02bfd3bd43d664a7fc918b7cbff93d2569c3f1 Mon Sep 17 00:00:00 2001
+From: Kevin O'Rourke <misc1-github@caboose.org.uk>
+Date: Sun, 28 Feb 2021 19:06:48 +0100
+Subject: [PATCH] Configure U-boot for RAUC.
+
+---
+ include/configs/mx6sll_kobo_clara_hd.h | 61 ++++++++++++++++++++------
+ 1 file changed, 47 insertions(+), 14 deletions(-)
+
+diff --git a/include/configs/mx6sll_kobo_clara_hd.h b/include/configs/mx6sll_kobo_clara_hd.h
+index 517c3137f6..786ce32378 100644
+--- a/include/configs/mx6sll_kobo_clara_hd.h
++++ b/include/configs/mx6sll_kobo_clara_hd.h
+@@ -79,27 +79,62 @@
+ 	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
+ 	"mmcpart=1\0" \
+ 	"mmcautodetect=no\0" \
+-	"mmcargs=setenv bootargs console=${console},${baudrate} rootwait rw " \
+-		"no_console_suspend root=/dev/mmcblk0p2 rootfstype=ext4 \0" \
++	"mmcargs=setenv default_bootargs console=${console},${baudrate} rootwait rw " \
++		"no_console_suspend rootfstype=ext4 \0" \
+ 	"loadbootscript=" \
+-		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
++		"ext4load mmc ${mmcdev}:${mmcpart} ${loadaddr} /boot/${script};\0" \
+ 	"bootscript=echo Running bootscript from mmc ...; " \
+ 		"source\0" \
+-	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} zimage\0" \
+-	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} imx6sll-kobo-clarahd.dtb\0" \
+-	"mmcboot=echo Booting from mmc ...; " \
++	"loadimage=ext4load mmc ${mmcdev}:${mmcpart} ${loadaddr} /boot/zImage\0" \
++	"loadfdt=ext4load mmc ${mmcdev}:${mmcpart} ${fdt_addr} /boot/imx6sll-kobo-clarahd.dtb\0" \
++	"raucboot=" \
+ 		"load_ntxkernel; " \
+ 		"load_ntxdtb; " \
+-		"run mmcargs; " \
++		"test -n \"${BOOT_ORDER}\" || setenv BOOT_ORDER \"A B\"; " \
++		"test -n \"${BOOT_A_LEFT}\" || setenv BOOT_A_LEFT 3; " \
++		"test -n \"${BOOT_B_LEFT}\" || setenv BOOT_B_LEFT 3; " \
++		"setenv bootargs; " \
++		"for BOOT_SLOT in \"${BOOT_ORDER}\"; do " \
++			"if test \"x${bootargs}\" != \"x\"; then " \
++		    	";" \
++		  	"elif test \"x${BOOT_SLOT}\" = \"xA\"; then " \
++		    	"if test ${BOOT_A_LEFT} -gt 0; then " \
++		      		"echo \"Found valid slot A, ${BOOT_A_LEFT} attempts remaining\"; " \
++					"setexpr BOOT_A_LEFT ${BOOT_A_LEFT} - 1; " \
++					"setenv mmcpart 1; " \
++					"run mmcargs; " \
++		      		"setenv bootargs \"${default_bootargs} root=/dev/mmcblk0p1 rauc.slot=A\"; " \
++		    	"fi; " \
++		  	"elif test \"x${BOOT_SLOT}\" = \"xB\"; then " \
++		    	"if test ${BOOT_B_LEFT} -gt 0; then " \
++		      		"echo \"Found valid slot B, ${BOOT_B_LEFT} attempts remaining\"; " \
++		      		"setexpr BOOT_B_LEFT ${BOOT_B_LEFT} - 1; " \
++					"setenv mmcpart 2; " \
++					"run mmcargs; " \
++		      		"setenv bootargs \"${default_bootargs} root=/dev/mmcblk0p2 rauc.slot=B\"; " \
++		    	"fi; " \
++		  	"fi; " \
++		"done; " \
++		"if test -n \"${bootargs}\"; then " \
++			"saveenv; " \
++		"else " \
++		  	"echo \"No valid slot found, resetting tries to 3\"; " \
++		  	"setenv BOOT_A_LEFT 3; " \
++		  	"setenv BOOT_B_LEFT 3; " \
++		  	"saveenv; " \
++		  	"reset; " \
++		"fi; " \
++		"echo \"Loading kernel\"; " \
+ 		"if run loadfdt; then " \
+ 			"if run loadimage; then " \
++				"echo \"Starting kernel\"; " \
+ 				"bootz ${loadaddr} - ${fdt_addr}; " \
+ 			"else " \
+ 				"echo WARN: Cannot load the image; " \
+ 			"fi; " \
+ 		"else " \
+ 			"echo WARN: Cannot load the DT; " \
+-		"fi;\0" \
++		"fi;\0"
+ 
+ #ifdef CONFIG_MFG
+ 	#define CONFIG_BOOTCOMMAND \
+@@ -109,9 +144,7 @@
+ #else
+ 	#define CONFIG_BOOTCOMMAND \
+ 	   "mmc dev ${mmcdev};" \
+-	   "if run loadimage; then " \
+-	    "run mmcboot; " \
+-	   "fi; " \
++	   "run raucboot; " \
+ 
+ #endif
+ 
+@@ -172,7 +205,7 @@
+ 
+ #if defined(CONFIG_ENV_IS_IN_FAT)
+ #define FAT_ENV_INTERFACE               "mmc"
+-#define FAT_ENV_DEVICE_AND_PART         "0:1"
++#define FAT_ENV_DEVICE_AND_PART         "0:3"
+ #define FAT_ENV_FILE                    "uboot.env"
+ #define CONFIG_FAT_WRITE
+ #endif // CONFIG_ENV_IS_IN_FAT
+@@ -255,13 +288,13 @@
+ 
+ #define CONFIG_GPT_TIMER
+ 
+-#define CONFIG_CMD_DATE  
++#define CONFIG_CMD_DATE
+ #define CONFIG_NTX_SW
+ #define CONFIG_RESERVED_TOPRAMSIZE		(8*1024*1024)
+ 
+ #define CONFIG_ANDROID_SUPPORT		1
+ #if defined(CONFIG_ANDROID_SUPPORT)
+ #include "mx6sll_ntx_android.h"
+-#endif 
++#endif
+ 
+ #endif				/* __CONFIG_H */

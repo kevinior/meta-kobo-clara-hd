@@ -1,0 +1,5 @@
+## Commands needed for haslate
+Cmnd_Alias HASLATE_CMDS = /sbin/modprobe, /sbin/rmmod, /bin/systemctl reboot, /bin/systemctl poweroff, /usr/bin/timedatectl
+
+## Allow those commands without a haslate
+@USER@ ALL= NOPASSWD: HASLATE_CMDS

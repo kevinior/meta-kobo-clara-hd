@@ -1,0 +1,13 @@
+[Unit]
+Description=haslate startup script
+After=display-manager
+
+[Service]
+ExecStart=/home/@USER@/haslate/haslate.py
+Restart=always
+WorkingDirectory=~
+User=@USER@
+Environment="DISPLAY=:0.0"
+
+[Install]
+WantedBy=multi-user.target

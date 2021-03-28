@@ -1,0 +1,18 @@
+# short-description: Create SD card image with a boot partition
+# long-description:
+# Create an image that can be written onto a SD card using dd for use
+# with Kobo Clara HD
+# It uses a modified version of Kobo's u-boot
+
+part u-boot --source rawcopy --sourceparams="file=${UBOOT_BINARY}" --ondisk mmcblk --no-table --align 1
+
+# The Kobo/NTX bootloader has a load of configuration blobs, which we don't actually need.
+# But leave a space for them anyway, before the proper partitions begin.
+
+# A and B root filesystems to allow for updates with RAUC.
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label rootA --align 4096 --fixed-size=1G --align 24576
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label rootB --align 4096 --fixed-size=1G
+
+part /media/data --ondisk mmcblk --fstype=vfat --label data --align 4096 --fixed-size=2G
+
+bootloader --ptable msdos
