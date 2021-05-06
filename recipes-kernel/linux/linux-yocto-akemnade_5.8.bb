@@ -34,14 +34,14 @@
 #
 #   defconfig: When a defconfig is provided, the linux-yocto configuration
 #              uses the filename as a trigger to use a 'allnoconfig' baseline
-#              before merging the defconfig into the build. 
+#              before merging the defconfig into the build.
 #
-#              If the defconfig file was created with make_savedefconfig, 
+#              If the defconfig file was created with make_savedefconfig,
 #              not all options are specified, and should be restored with their
 #              defaults, not set to 'n'. To properly expand a defconfig like
 #              this, specify: KCONFIG_MODE="--alldefconfig" in the kernel
 #              recipe.
-#   
+#
 #   example configuration addition:
 #            SRC_URI += "file://smp.cfg"
 #   example patch addition (for kernel v4.x only):
@@ -89,6 +89,8 @@ S = "${WORKDIR}/git"
 SRC_URI += "git://github.com/akemnade/linux.git;protocol=https;branch=kobo/merged-5.8 \
 file://defconfig"
 SRCREV="eeeac1770c7662a8b3bf981510b3cd8b11d5627d"
+
+DEPENDS += " lzop-native"
 
 #
 # This is a bit of a hack to do roughly what linux-imx-headers does for
