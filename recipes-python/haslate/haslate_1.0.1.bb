@@ -4,8 +4,8 @@ AUTHOR = "Kevin O'Rourke <misc1-claradev@caboose.org.uk>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=df115800ba1a50be5111abfce7d9ceb0"
 
-PV = "1.0.0+git${SRCPV}"
-SRCREV = "515ca8230e7138f86da57f106b1cc6bf008ff9f3"
+PV = "1.0.1+git${SRCPV}"
+SRCREV = "585f99f99b3c47194798533952f8487a03200d46"
 SRC_URI = " \
     git://github.com/kevinior/haslate.git;protocol=https;branch=main \
     file://haslate.service.in \
@@ -21,7 +21,7 @@ SRC_URI[sha256sum] = "8b1e7b63f47aafcdd8849933b206778747ef1802bd3d526aca45ed7714
 S = "${WORKDIR}/git"
 
 DEPENDS += "python3-pygame python3-ruamel-yaml python3-websockets "
-RDEPENDS_${PN} = "python3-pygame python3-ruamel-yaml python3-websockets python3-modules"
+RDEPENDS_${PN} = "python3-pygame python3-ruamel-yaml python3-websockets python3-modules networkmanager-nmcli wireless-tools"
 
 # The non-root username to create and run under.
 APPUSER = "koboapp"

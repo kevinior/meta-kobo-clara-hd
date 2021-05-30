@@ -50,47 +50,40 @@
 #            SRC_URI += "file://feature.scc"
 #
 
-# inherit kernel
-# require recipes-kernel/linux/linux-yocto.inc
-
-# # Override SRC_URI in a copy of this recipe to point at a different source
-# # tree if you do not want to build from Linus' tree.
-# SRC_URI = "git://github.com/akemnade/linux.git;protocol=https;nocheckout=1;branch=kobo/merged-5.8;name=machine"
-
-# # defconfig copied from:
-# # https://github.com/akemnade/linux/blob/kobo/merged-5.8/arch/arm/configs/kobo_defconfig
-# FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-# SRC_URI += " file://defconfig "
-
-# LINUX_VERSION ?= "5.8"
-# LINUX_VERSION_EXTENSION_append = "-akemnade"
-
-# LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
-
-# # Modify SRCREV to a different commit hash in a copy of this recipe to
-# # build a different release of the Linux kernel.
-# # tag: v4.2 64291f7db5bd8150a74ad2036f1037e6a0428df2
-# SRCREV_machine="eeeac1770c7662a8b3bf981510b3cd8b11d5627d"
-
-# PV = "${LINUX_VERSION}+git${SRCPV}"
-
-# # Override COMPATIBLE_MACHINE to include your machine in a copy of this recipe
-# # file. Leaving it empty here ensures an early explicit build failure.
-# COMPATIBLE_MACHINE_kobo-clara-hd = "kobo-clara-hd"
-
-
-# Alternative, try simpler kernel recipe style
-SECTION = "kernel"
-DESCRIPTION = "Linux kernel for Kobo Clara HD"
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 inherit kernel
-S = "${WORKDIR}/git"
-SRC_URI += "git://github.com/akemnade/linux.git;protocol=https;branch=kobo/merged-5.8 \
-file://defconfig"
-SRCREV="eeeac1770c7662a8b3bf981510b3cd8b11d5627d"
+require recipes-kernel/linux/linux-yocto.inc
 
+# Override SRC_URI in a copy of this recipe to point at a different source
+# tree if you do not want to build from Linus' tree.
+SRC_URI = "git://github.com/akemnade/linux.git;protocol=https;nocheckout=1;branch=kobo/merged-5.10;name=machine"
+
+# defconfig copied from:
+# https://github.com/akemnade/linux/blob/kobo/merged-5.10/arch/arm/configs/kobo_defconfig
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+SRC_URI += " file://defconfig "
+
+LINUX_VERSION ?= "5.10"
+LINUX_VERSION_EXTENSION_append = "-akemnade"
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
+
+# Modify SRCREV to a different commit hash in a copy of this recipe to
+# build a different release of the Linux kernel.
+# tag: v4.2 64291f7db5bd8150a74ad2036f1037e6a0428df2
+SRCREV_machine="7d2632dc809f70583e164fa863acaa5af5bf688a"
+
+PV = "${LINUX_VERSION}+git${SRCPV}"
+
+# Override COMPATIBLE_MACHINE to include your machine in a copy of this recipe
+# file. Leaving it empty here ensures an early explicit build failure.
+COMPATIBLE_MACHINE_kobo-clara-hd = "kobo-clara-hd"
+
+# See the comment at the top of this recipe.
+KCONFIG_MODE="--alldefconfig"
+
+# For some reason this is needed
 DEPENDS += " lzop-native"
+
 
 #
 # This is a bit of a hack to do roughly what linux-imx-headers does for
