@@ -1,4 +1,4 @@
-require recipes-bsp/u-boot/u-boot-fw-utils_2019.07.bb
+require u-boot-fw-utils_2019.07.bb
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 

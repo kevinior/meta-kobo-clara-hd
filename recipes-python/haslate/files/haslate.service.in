@@ -1,6 +1,6 @@
 [Unit]
 Description=haslate startup script
-After=display-manager
+After=xserver-nodm.service
 
 [Service]
 ExecStart=/home/@USER@/haslate/haslate.py
