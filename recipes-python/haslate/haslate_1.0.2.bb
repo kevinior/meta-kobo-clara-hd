@@ -4,8 +4,8 @@ AUTHOR = "Kevin O'Rourke <misc1-claradev@caboose.org.uk>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=df115800ba1a50be5111abfce7d9ceb0"
 
-PV = "1.0.1+git${SRCPV}"
-SRCREV = "585f99f99b3c47194798533952f8487a03200d46"
+PV = "1.0.2+git${SRCPV}"
+SRCREV = "1b97619cce3d399787d75994c4dc324e42f76b74"
 SRC_URI = " \
     git://github.com/kevinior/haslate.git;protocol=https;branch=main \
     file://haslate.service.in \

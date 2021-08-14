@@ -7,7 +7,7 @@ inherit module
 SRC_URI = "git://github.com/jwrdegoede/rtl8189ES_linux.git;protocol=https;branch=rtl8189fs \
            file://0001-Fix-build-problems-in-Yocto.patch \
            "
-SRCREV = "0ba46e2434eec6f67d0712ed119a4ef8e05ccf91"
+SRCREV = "62c31d577c385316bb99107f60e63169dacc37db"
 
 S = "${WORKDIR}/git"
 
