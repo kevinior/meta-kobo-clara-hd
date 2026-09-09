@@ -14,6 +14,6 @@ SRC_URI[sha256sum] = "8b1e7b63f47aafcdd8849933b206778747ef1802bd3d526aca45ed7714
 S = "${WORKDIR}/pygame-2.0.1"
 
 DEPENDS += "virtual/libsdl2 libsdl2-image libsdl2-ttf freetype"
-RDEPENDS_${PN} = ""
+RDEPENDS:${PN} = ""
 
 inherit setuptools3

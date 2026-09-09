@@ -21,7 +21,7 @@ SRC_URI[sha256sum] = "8b1e7b63f47aafcdd8849933b206778747ef1802bd3d526aca45ed7714
 S = "${WORKDIR}/git"
 
 DEPENDS += "python3-pygame python3-ruamel-yaml python3-websockets "
-RDEPENDS_${PN} = "python3-pygame python3-ruamel-yaml python3-websockets python3-modules networkmanager-nmcli wireless-tools"
+RDEPENDS:${PN} = "python3-pygame python3-ruamel-yaml python3-websockets python3-modules networkmanager-nmcli wireless-tools"
 
 # The non-root username to create and run under.
 APPUSER = "koboapp"
@@ -29,12 +29,12 @@ APPUSER = "koboapp"
 # The hashed password of the non-root user.
 APPUSERHASH = "eqfawmAyTKDxs"
 
-FILES_${PN} += "/home/${APPUSER} /home/root/.Xsession"
+FILES:${PN} += "/home/${APPUSER} /home/root/.Xsession"
 
 # Start the application automatically using systemd
 inherit systemd
 
-SYSTEMD_SERVICE_${PN} = "haslate.service"
+SYSTEMD_SERVICE:${PN} = "haslate.service"
 
 # Create a non-root user to run the application as.
 # Note that you'll need to add your own authorized_keys file.
@@ -42,12 +42,12 @@ inherit useradd
 
 USERADD_PACKAGES = "${PN}"
 
-USERADD_PARAM_${PN} = "-p ${APPUSERHASH} -G sudo ${APPUSER}"
+USERADD_PARAM:${PN} = "-p ${APPUSERHASH} -G sudo ${APPUSER}"
 
 # There's a high chance of the UID being the same as the user running
 # bitbake and causing lots of 'host-user-contaminated' errors, so
 # we have to ignore those.
-INSANE_SKIP_${PN} += "host-user-contaminated"
+INSANE_SKIP:${PN} += "host-user-contaminated"
 
 
 do_install() {

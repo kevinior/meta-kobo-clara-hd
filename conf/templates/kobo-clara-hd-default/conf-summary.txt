@@ -1,0 +1,2 @@
+Basic build configuration made for the Kobo Clara HD Rev A, including Xorg, USB NCM gadget (fe80::4) using Xorg with systemd. Root pw is empty. Save the waveform from the original image and put it to /lib/firmware/imx/epdc/epdc.fw. USB Net
+

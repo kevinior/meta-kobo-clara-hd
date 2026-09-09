@@ -1,0 +1,26 @@
+From 9ea8b8e6720c56b222187605c376c1ffc9779b6c Mon Sep 17 00:00:00 2001
+From: Andreas Kemnade <andreas@kemnade.info>
+Date: Wed, 2 Sep 2026 13:44:55 +0200
+Subject: [PATCH] hv: remove kconfigcheck-confusing line from Kconfig
+Upstream-Status: Inappropriate konfigcheck cannot work with new syntax 
+
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ drivers/hv/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index aa11bcefddf2..2d0b3fcb0ff8 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -74,7 +74,6 @@ config MSHV_ROOT
+ 	# e.g. When withdrawing memory, the hypervisor gives back 4k pages in
+ 	# no particular order, making it impossible to reassemble larger pages
+ 	depends on PAGE_SIZE_4KB
+-	depends on HYPERV_VMBUS if HYPERV_VMBUS
+ 	select EVENTFD
+ 	select VIRT_XFER_TO_GUEST_WORK
+ 	select HMM_MIRROR
+-- 
+2.47.3
+

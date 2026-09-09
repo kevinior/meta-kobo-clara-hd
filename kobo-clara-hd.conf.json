@@ -1,0 +1,136 @@
+{
+   "bitbake-setup" : {
+      "configurations" : [
+         {
+            "bb-layers" : [
+               "openembedded-core/meta",
+               "meta-yocto/meta-poky",
+               "meta-openembedded/meta-oe",
+               "meta-openembedded/meta-multimedia",
+               "meta-openembedded/meta-python",
+               "meta-arm/meta-arm",
+               "meta-arm/meta-arm-toolchain",
+               "meta-openembedded/meta-gnome",
+               "meta-openembedded/meta-networking",
+               "meta-openembedded/meta-filesystems",
+               "meta-openembedded/meta-perl",
+               "meta-qt6",
+               "meta-kobo-clara-hd",
+               "meta-rauc"
+            ],
+            "description" : "Kobo Clara HD Rev A setup with USB gadget network, systemd, Xorg",
+            "name" : "kobo-clara-hd-systemd-xorg",
+            "oe-fragments" : [
+               "machine/kobo-clara-hd",
+               "distro/kobo-clara-hd"
+            ]
+         }
+      ]
+   },
+   "sources" : {
+      "bitbake" : {
+         "git-remote" : {
+            "remotes" : {
+               "origin" : {
+                  "uri" : "https://git.openembedded.org/bitbake"
+               }
+            },
+            "rev" : "yocto-6.0.2"
+         },
+         "path" : "bitbake"
+      },
+      "meta-arm" : {
+         "git-remote" : {
+            "branch" : "wrynose",
+            "describe" : "CORSTONE1000-2026.05-1-g0979b804",
+            "remotes" : {
+               "yp" : {
+                  "uri" : "https://git.yoctoproject.org/meta-arm"
+               }
+            },
+            "rev" : "0979b80429099f1a42dc0026c8c466cee780bc74"
+         },
+         "path" : "meta-arm"
+      },
+      "meta-kobo-clara-hd" : {
+         "contains_this_file" : true,
+         "git-remote" : {
+            "branch" : "config-test",
+            "describe" : "",
+            "remotes" : {
+               "origin" : {
+                  "uri" : "https://github.com/akemnade/meta-kobo-clara-hd"
+               }
+            },
+            "rev" : "eca0af51d5c04825f94a5342d2ee3a9b06ff0f03"
+         },
+         "path" : "meta-kobo-clara-hd"
+      },
+      "meta-openembedded" : {
+         "git-remote" : {
+            "branch" : "wrynose",
+            "describe" : "",
+            "remotes" : {
+               "oe" : {
+                  "uri" : "https://github.com/openembedded/meta-openembedded"
+               }
+            },
+            "rev" : "6bf0d8ad57b33950bab4c7f6c037e1ccb6f6e2eb"
+         },
+         "path" : "meta-openembedded"
+      },
+      "meta-qt6" : {
+         "git-remote" : {
+            "branch" : "6.11.2",
+            "describe" : "v6.11.2",
+            "remotes" : {
+               "qt" : {
+                  "uri" : "https://github.com/YoeDistro/meta-qt6"
+               }
+            },
+            "rev" : "833650717a1c055b6a32e0a956821282a9a2b482"
+         },
+         "path" : "meta-qt6"
+      },
+      "meta-rauc" : {
+         "git-remote" : {
+            "branch" : "wrynose",
+            "describe" : "",
+            "remotes" : {
+               "origin" : {
+                  "uri" : "https://github.com/rauc/meta-rauc.git"
+               }
+            },
+            "rev" : "38da0e5866a953e664001ba90b5edad68d68cd5d"
+         },
+         "path" : "meta-rauc"
+      },
+      "meta-yocto" : {
+         "git-remote" : {
+            "branch" : "wrynose",
+            "describe" : "yocto-6.0.2-13-g1b132647",
+            "remotes" : {
+               "yp" : {
+                  "uri" : "https://git.yoctoproject.org/meta-yocto"
+               }
+            },
+            "rev" : "1b132647002eea43a2c7a7f857f63f42dacbc26c"
+         },
+         "path" : "meta-yocto"
+      },
+      "openembedded-core" : {
+         "git-remote" : {
+            "branch" : "wrynose",
+            "describe" : "yocto-6.0.2-232-g00c66f1d38",
+            "remotes" : {
+               "oe" : {
+                  "uri" : "https://github.com/openembedded/openembedded-core"
+               }
+            },
+            "rev" : "00c66f1d38a234f7738c2eb8fafa41b4f057a865"
+         },
+         "path" : "openembedded-core"
+      }
+   },
+   "version" : "1.0"
+}

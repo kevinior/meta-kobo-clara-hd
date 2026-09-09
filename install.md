@@ -1,87 +1,24 @@
 # Installation/setup instructions
 
-This is based on [Embedded Linux for i.MX], release 5.10.9_1.0.0 with Linux kernel 5.10.9 and Yocto 3.2 Gatesgarth.
+This is based on Yocto 6.0 Wrynose.
 
-## Install Yocto/NXP BSP
-
-Based on instructions from [user guide].
-
-### Install the repo tool
-
-See the instructions in [user guide] section 3.2.
-
-### Install NXP's Yocto
-
+## Prepare build using bitbake-layers created files
+You need to have bitbake available manually
 ```bash
-mkdir imx-linux-5.10.9_1.0.0
-cd imx-linux-5.10.9_1.0.0
-repo init -u https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-gatesgarth -m imx-5.10.9-1.0.0.xml
+cd ..
+meta-kobo-clara-hd/setup-layers --destdir build
+TEMPLATECONF=$PWD/meta-kobo-clara-hd/conf/templates/kobo-clara-hd-default build/setup-build
 ```
-
-### Install meta-kobo-clara-hd
-
+## Or prepare build v ia bitbake-setup
+Install bitbake-setup via pip/pipx and then build it.
 ```bash
-DISTRO=kobo-clara-hd MACHINE=kobo-clara-hd source imx-setup-release.sh -b bld-kobo-clara-hd
+pipx install bitbake-setup
+cd ..
+bitbake-setup init $PWD/meta-kobo-clara-hd/kobo-clara-hd.conf.json
+cd bitbake-builds/kobo-clara-hd2-kobo-clara-hd-systemd-xorg/build/
+. ./init-build-env
 ```
-
-Accept the NXP EULA.
-
-(After this you can just use `source setup-environment bld-kobo-clara-hd`)
-
-Add the meta-kobo-clara-hd layer:
-```bash
-bitbake-layers add-layer ../sources/meta-kobo-clara-hd/
-```
-
-### Install meta-rauc
-
-Assuming your current directory is bld-kobo-clara-hd:
-```bash
-cd ../sources
-git clone https://github.com/rauc/meta-rauc.git
-cd meta-rauc
-git checkout gatesgarth
-cd ../../bld-kobo-clara-hd
-bitbake-layers add-layer ../sources/meta-rauc/
-```
-
-### Check the layer configuration
-
-`bitbake-layers show-layers` should give you something like:
-```
-layer                 path                                      priority
-==========================================================================
-meta                  /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/poky/meta  5
-meta-poky             /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/poky/meta-poky  5
-meta-oe               /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-openembedded/meta-oe  6
-meta-multimedia       /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-openembedded/meta-multimedia  6
-meta-python           /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-openembedded/meta-python  7
-meta-freescale        /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-freescale  5
-meta-freescale-3rdparty  /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-freescale-3rdparty  4
-meta-freescale-distro  /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-freescale-distro  4
-meta-bsp              /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-imx/meta-bsp  8
-meta-sdk              /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-imx/meta-sdk  8
-meta-ml               /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-imx/meta-ml  8
-meta-nxp-demo-experience  /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-nxp-demo-experience  7
-meta-browser          /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-browser  7
-meta-rust             /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-rust  7
-meta-clang            /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-clang  7
-meta-gnome            /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-openembedded/meta-gnome  7
-meta-networking       /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-openembedded/meta-networking  5
-meta-filesystems      /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-openembedded/meta-filesystems  6
-meta-qt5              /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-qt5  7
-meta-python2          /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-python2  7
-meta-kobo-clara-hd    /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-kobo-clara-hd  91
-meta-rauc             /home/kevin/reps/imx-linux-5.10.9_1.0.0/sources/meta-rauc  6
-```
-
-### Fix local.conf
-
-In bld-kobo-clara-hd/conf/local.conf you might want to comment out
-`EXTRA_IMAGE_FEATURES ?= "debug-tweaks"`, otherwise passwordless root
-login will be enabled.
-
-## Configuration
+## Haslate configuration (unmaintained)
 
 ### recipes-core/rauc
 
@@ -96,10 +33,12 @@ default password in the `APPUSERHASH` variable and also add an
 authorized_keys file for that user in _recipes-python/haslate/files_.
 
 
-[Embedded Linux for i.MX]: https://www.nxp.com/design/software/embedded-software/i-mx-software/embedded-linux-for-i-mx-applications-processors:IMXLINUX
-[user guide]: https://www.nxp.com/docs/en/user-guide/IMX_YOCTO_PROJECT_USERS_GUIDE.pdf
-[a script]: https://github.com/rauc/meta-rauc/blob/master/scripts/README
+## Build generic image
+`bitbake clara-image-core`
 
-## Build
+you need to add epdc.fw afterwards using extracted data from original system.
+This one creates an image with *EMPTY ROOT PASSWORD*, usb network is accessible
+via link-scoped address `fe80::4` so it can be reached with `ssh root@fe80::4%usb0`
 
+## Build haslate image
 `bitbake kobo-hass-image`

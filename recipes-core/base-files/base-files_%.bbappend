@@ -1,6 +1,6 @@
 # Use our own fstab
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-do_install_append() {
+do_install:append() {
     install -m 0755 -d ${D}/media/data
 }

@@ -9,22 +9,23 @@ IMAGE_FEATURES += " \
     hwcodecs \
     x11-base \
 "
-SDKIMAGE_FEATURES_append = " \
+SDKIMAGE_FEATURES:append = " \
     staticdev-pkgs \
 "
 
-IMAGE_INSTALL_append = " \
-    clara-hd-udev-rules \
-    u-boot-kobo-fw-utils \
+IMAGE_INSTALL:append = " \
     sudo \
     networkmanager \
     tzdata \
     screen \
     xev \
-    rauc \
+    kernel-modules \
+    gadgetconf \
+    u-boot-kobo-extlinux \
 "
 
-IMAGE_INSTALL_remove += " virtual/perf"
+IMAGE_INSTALL:remove = " virtual/perf"
+IMAGE_FSTYPES:append = " wic.zst"
 
 inherit extrausers
-EXTRA_USERS_PARAMS = "usermod -L root"
+#EXTRA_USERS_PARAMS = "usermod -L root"

@@ -1,6 +1,7 @@
 From 8d02bfd3bd43d664a7fc918b7cbff93d2569c3f1 Mon Sep 17 00:00:00 2001
 From: Kevin O'Rourke <misc1-github@caboose.org.uk>
 Date: Sun, 28 Feb 2021 19:06:48 +0100
+Upstream-Status: Pending
 Subject: [PATCH] Configure U-boot for RAUC.
 
 ---

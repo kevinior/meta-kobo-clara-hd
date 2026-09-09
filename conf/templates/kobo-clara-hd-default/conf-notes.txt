@@ -1,0 +1,5 @@
+You need to extract the waveform from the original image.
+Use https://github.com/akemnade/kobo-firmware-extractor 
+extract-kobohidden /dev/sdX 14336 epdc.fw
+
+Put the result into /lib/firmware/imx/epdc/

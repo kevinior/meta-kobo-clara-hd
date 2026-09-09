@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="gadget", RUN+="/usr/bin/config-gadget.sh"

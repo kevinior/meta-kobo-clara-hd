@@ -1,2 +1,0 @@
-# Added for Kobo Clara touchscreen
-SUBSYSTEM=="input", KERNEL=="event[0-9]*", ENV{ID_PATH}=="platform-21a4000.i2c", ENV{ID_INPUT_TABLET}="", ENV{ID_INPUT_TOUCHSCREEN}="1"

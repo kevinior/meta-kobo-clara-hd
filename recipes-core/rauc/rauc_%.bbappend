@@ -1,2 +1,2 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-SRC_URI_append := " file://system.conf"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
+SRC_URI:append := " file://system.conf"

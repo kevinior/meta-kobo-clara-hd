@@ -1,0 +1,8 @@
+[Match]
+Driver = g_ether
+[Link]
+ActivationPolicy=auto
+
+[Network]
+Address = fe80::4/64
+

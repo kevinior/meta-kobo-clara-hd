@@ -2,6 +2,7 @@ From f1fd21675bcfe713889a162540bbc3cd8ab226c0 Mon Sep 17 00:00:00 2001
 From: Kevin O'Rourke <misc1-github@caboose.org.uk>
 Date: Sun, 31 Jan 2021 11:35:10 +0100
 Subject: [PATCH] Fix build problems in Yocto
+Upstream-Status: Pending
 
 ---
  Makefile | 6 +++---
