@@ -1,3 +1,7 @@
+# IMPORTANT NOTE
+
+I'm no longer using or working on this repo but akemnade has continued working on it in [his fork](https://github.com/akemnade/meta-kobo-clara-hd).
+
 # meta-kobo-clara-hd
 
 The meta-kobo-clara-hd layer provides a working Yocto Linux system for
